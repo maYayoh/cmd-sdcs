@@ -19,6 +19,8 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(1,0)
 	e2:SetCondition(s.reccon)
 	e2:SetTarget(s.rectg)
 	e2:SetOperation(s.recop)
@@ -34,9 +36,12 @@ function s.atktg(e,c)
 	return c~=e:GetHandler() and e:GetHandler():IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.reccon(e,tp,eg,ep,ev,re,r,rp)
-	return tp==ep
+	if not eg then return false end
+	local tc=eg:GetFirst()
+	return tp==rp and tc~=e:GetHandler()
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+	Debug.Message(e,tp,eg,ep,ev,re,r,rp)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(500)
